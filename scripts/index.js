@@ -2,32 +2,34 @@
 
 // @todo: DOM узлы
 const cardTemplate = document.querySelector("#card-template").content;
-const cardList = document.querySelector(".places__list");
+const cardsContainer = document.querySelector(".places__list");
 
 // @todo: Функция удаления карточки
-const deleteCard = (e) => {
-  // Поиск кликнутого элемента внутри .card
-  const card = e.target.closest(".card");
-  card.remove(card);
-};
+function deleteCard(card) {
+  card.remove();
+}
 
-const addLike = (e) => {
-  e.target.classList.toggle("card__like-button_is-active");
-};
+function toggleLike(button) {
+  button.classList.toggle("card__like-button_is-active");
+}
 
 // @todo: Функция создания карточки
-function addCard(name, link, deleteCard, addLike) {
+function createCard({ name, link }, deleteCard, toggleLike) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const buttonDelete = cardElement.querySelector(".card__delete-button");
+  const likeButton = cardElement.querySelector(".card__like-button");
+
   cardElement.querySelector(".card__image").src = link;
   cardElement.querySelector(".card__image").alt = name;
   cardElement.querySelector(".card__title").textContent = name;
-  // Ловим клик на кокретном элементе и вызываем для него функцию удаления
-  cardElement.querySelector(".card__delete-button").onclick = deleteCard;
-  cardElement.querySelector(".card__like-button").onclick = addLike;
+  // Ловим клик на конкретном элементе и вызываем функцию
+  buttonDelete.addEventListener("click", () => deleteCard(cardElement));
+  likeButton.addEventListener("click", () => toggleLike(likeButton));
+
   return cardElement;
 }
 
 initialCards.forEach((element) => {
   // @todo: Вывести карточки на страницу
-  cardList.append(addCard(element.name, element.link, deleteCard, addLike));
+  cardsContainer.append(createCard(element, deleteCard, toggleLike));
 });
