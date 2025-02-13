@@ -12,10 +12,10 @@ const addCardButton = document.querySelector(".profile__add-button");
 const popupAddNewCard = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
 const imageCaption = document.querySelector(".popup__caption");
-const cardName = document.querySelector(".popup__input_type_card-name");
-const imgPlace = document.querySelector(".popup__input_type_url");
+const placeNameInput = document.querySelector(".popup__input_type_card-name");
+const imgPlaceInput = document.querySelector(".popup__input_type_url");
 const popupImage = document.querySelector(".popup__image");
-const formReset = document.querySelector(".form__reset");
+const formNewPlaceReset = document.querySelector(".form__reset");
 const nameProfile = document.querySelector(".profile__title");
 const jobProfile = document.querySelector(".profile__description");
 const nameInput = document.querySelector(".popup__input_type_name");
@@ -32,14 +32,14 @@ export function showImageModal(link, name) {
 //Функция добавления новой карточки в начало
 function handleNewPlaceFormSubmit(e) {
   e.preventDefault();
-  const name = cardName.value;
-  const link = imgPlace.value;
+  const name = placeNameInput.value;
+  const link = imgPlaceInput.value;
   popupImage.src = link;
   popupImage.alt = name;
   cardsContainer.prepend(
     createCard({ name, link }, deleteCard, toggleLike, showImageModal)
   );
-  formReset.reset();
+  formNewPlaceReset.reset();
   closeModal(popupAddNewCard);
 }
 
