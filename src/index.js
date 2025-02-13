@@ -2,7 +2,6 @@ import "./pages/index.css";
 import { deleteCard, toggleLike, createCard } from "./components/card.js";
 import { initialCards } from "./scripts/cards.js";
 import { openModal, closeModal, closeButtonPopup } from "./components/modal.js";
-import changeOrAddProfile from "./components/changeOrAddProfile.js";
 
 const cardsContainer = document.querySelector(".places__list");
 const editProfileForm = document.forms["edit-profile"];
@@ -16,12 +15,17 @@ const imageCaption = document.querySelector(".popup__caption");
 const cardName = document.querySelector(".popup__input_type_card-name");
 const imgPlace = document.querySelector(".popup__input_type_url");
 const popupImage = document.querySelector(".popup__image");
+const formReset = document.querySelector(".form__reset");
+const nameProfile = document.querySelector(".profile__title");
+const jobProfile = document.querySelector(".profile__description");
+const nameInput = document.querySelector(".popup__input_type_name");
+const jobInput = document.querySelector(".popup__input_type_description");
 
 //Функция открытия попапа с картинкой
 export function showImageModal(link, name) {
   popupImage.src = link;
+  popupImage.alt = name;
   imageCaption.textContent = name;
-  closeButtonPopup(popupTypeImage);
   openModal(popupTypeImage);
 }
 
@@ -35,8 +39,7 @@ function handleNewPlaceFormSubmit(e) {
   cardsContainer.prepend(
     createCard({ name, link }, deleteCard, toggleLike, showImageModal)
   );
-  cardName.value = "";
-  imgPlace.value = "";
+  formReset.reset();
   closeModal(popupAddNewCard);
 }
 
@@ -50,7 +53,7 @@ initialCards.forEach((element) => {
 function handleEditFormSubmit(e) {
   e.preventDefault();
   // Функция заполнения инпутов формы попапа из профиля (т.к. флаг false)
-  changeOrAddProfile(false);
+  addProfileData();
   closeModal(popupEditProfile);
 }
 
@@ -64,7 +67,7 @@ addNewPlaceForm.addEventListener("submit", handleNewPlaceFormSubmit);
 editProfileButton.addEventListener("click", () => {
   openModal(popupEditProfile);
   // Функция заполнения строчек имени и професии в профиле из попапа (т.к. флаг true)
-  changeOrAddProfile(true);
+  changeProfileData();
 });
 
 //2 Попап Открытие попапа добавления карточки на кнопку +
@@ -75,3 +78,15 @@ addCardButton.addEventListener("click", () => {
 //Закрытие на кнопку крестик
 closeButtonPopup(popupEditProfile);
 closeButtonPopup(popupAddNewCard);
+closeButtonPopup(popupTypeImage);
+
+// Функции заполнения строчек имени и професии из попапа и наоборот
+function changeProfileData() {
+  nameInput.value = nameProfile.textContent;
+  jobInput.value = jobProfile.textContent;
+}
+
+function addProfileData() {
+  nameProfile.textContent = nameInput.value;
+  jobProfile.textContent = jobInput.value;
+}
