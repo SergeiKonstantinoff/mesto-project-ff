@@ -6,3 +6,5 @@
 
 
 https://github.com/SergeiKonstantinoff/mesto-project-ff.git
+
+Ссылка на сайт: https://sergeikonstantinoff.github.io/mesto-project-ff/
