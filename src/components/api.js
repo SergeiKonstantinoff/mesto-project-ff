@@ -25,7 +25,7 @@ export function requestDeleteCard(id) {
   return fetch(`${configApi.baseUrl}/cards/${id}`, {
     method: "DELETE",
     headers: configApi.headers,
-  });
+  }).then(handleResponse);
 }
 
 // Редактирование данных пользователя на сервере
@@ -58,7 +58,7 @@ export const addNewCardOnServer = (name, link) => {
       name: name,
       link: link,
     }),
-  });
+  }).then(handleResponse);
 };
 
 //Запрос на постановку либо снятие лайка
@@ -66,7 +66,7 @@ export const requestToggleLike = (id, requestType) => {
   return fetch(`${configApi.baseUrl}/cards/likes/${id}`, {
     method: requestType,
     headers: configApi.headers,
-  });
+  }).then(handleResponse);
 };
 
 //Запрос на обновление аватара

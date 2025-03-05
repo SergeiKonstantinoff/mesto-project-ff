@@ -90,7 +90,6 @@ function handleNewPlaceFormSubmit(e) {
   e.preventDefault();
   e.target.querySelector(".button").textContent = "Сохранить...";
   addNewCardOnServer(placeNameInput.value, imgPlaceInput.value)
-    .then((response) => response.json())
     .then((data) => {
       cardsContainer.prepend(
         createCard(
@@ -104,16 +103,17 @@ function handleNewPlaceFormSubmit(e) {
           openModal
         )
       );
+      clearValidation(
+        popupAddNewCard.querySelector(".popup__form"),
+        dataForValidity
+      );
+      addNewPlaceForm.reset();
+      closeModal(popupAddNewCard);
     })
     .catch((e) => {
       console.log(e);
     })
     .finally((e.target.querySelector(".button").textContent = "Сохранить"));
-  clearValidation(
-    popupAddNewCard.querySelector(".popup__form"),
-    dataForValidity
-  );
-  closeModal(popupAddNewCard);
 }
 
 //Функция обновления данных профиля
@@ -121,13 +121,15 @@ function handleEditFormSubmit(e) {
   e.preventDefault();
 
   e.target.querySelector(".button").textContent = "Сохранить...";
-  // Функция заполнения инпутов формы попапа из профиля
-  addProfileData();
+
   //Редактирование данных пользователя на сервере***
   changeDataProfileOnServer(nameInput.value, jobInput.value)
+    .then((data) => {
+      addProfileData();
+      closeModal(popupEditProfile);
+    })
     .catch((e) => console.log(e))
     .finally((e.target.querySelector(".button").textContent = "Сохранить"));
-  closeModal(popupEditProfile);
 }
 
 //Функция смены аватара
@@ -138,17 +140,20 @@ function handleUpdateAvatar(e) {
   requestUpdateAvatar(
     updateAvatarForm.querySelector(".popup__input_type_url").value
   )
+    .then((data) => {
+      profileImage.src = updateAvatarForm.querySelector(
+        ".popup__input_type_url"
+      ).value;
+      closeModal(updateAvatarPopup);
+    })
     .catch((e) => console.log(e))
     .finally((e.target.querySelector(".button").textContent = "Сохранить"));
-  profileImage.src = updateAvatarForm.querySelector(
-    ".popup__input_type_url"
-  ).value;
-  closeModal(updateAvatarPopup);
 }
 
 // Обработчик нажатия на кнопку "Сохранить" при редактировании профиля
 editProfileForm.addEventListener("submit", handleEditFormSubmit);
 
+// Обработчик нажатия на кнопку "Сохранить" при обновлении аватара
 updateAvatarForm.addEventListener("submit", handleUpdateAvatar);
 
 // Обработчик нажатия на кнопку "Сохранить" при добавлении карточки
@@ -156,32 +161,19 @@ addNewPlaceForm.addEventListener("submit", handleNewPlaceFormSubmit);
 
 // Открытие попапа редактирования пользователя на кнопку
 editProfileButton.addEventListener("click", () => {
-  openModal(popupEditProfile);
-  clearValidation(
-    popupEditProfile.querySelector(".popup__form"),
-    dataForValidity
-  );
-
+  openAndValidityPopup(popupEditProfile);
   changeProfileData();
 });
 
 // Открытие попапа обновления аватара
-updateAvatarButton.addEventListener("click", () => {
-  openModal(updateAvatarPopup);
-  clearValidation(
-    updateAvatarPopup.querySelector(".popup__form"),
-    dataForValidity
-  );
-});
+updateAvatarButton.addEventListener("click", () =>
+  openAndValidityPopup(updateAvatarPopup)
+);
 
 // Открытие попапа добавления карточки на кнопку +
-addCardButton.addEventListener("click", () => {
-  clearValidation(
-    popupAddNewCard.querySelector(".popup__form"),
-    dataForValidity
-  );
-  openModal(popupAddNewCard);
-});
+addCardButton.addEventListener("click", () =>
+  openAndValidityPopup(popupAddNewCard)
+);
 
 //Закрытие на кнопку крестик для попапов
 closeButtonPopup(updateAvatarPopup);
@@ -198,4 +190,9 @@ function changeProfileData() {
 function addProfileData() {
   nameProfile.textContent = nameInput.value;
   jobProfile.textContent = jobInput.value;
+}
+
+function openAndValidityPopup(popup) {
+  clearValidation(popup.querySelector(".popup__form"), dataForValidity);
+  openModal(popup);
 }

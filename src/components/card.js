@@ -2,27 +2,30 @@ const cardTemplate = document.querySelector("#card-template").content;
 
 // @todo: Функция удаления карточки
 export function deleteCard(requestDeleteCard, id, card) {
-  requestDeleteCard(id).catch((e) => {
-    console.log(e);
-  });
-  card.remove();
+  requestDeleteCard(id)
+    .then(card.remove())
+    .catch((e) => {
+      console.log(e);
+    });
 }
 
 // @todo: Функция "поставить лайк"
 export function toggleLike(requestToggleLike, id, button, cardCountLikes) {
   if (!button.classList.contains("card__like-button_is-active")) {
-    button.classList.add("card__like-button_is-active");
     requestToggleLike(id, "PUT")
-      .then((res) => res.json())
-      .then((data) => (cardCountLikes.textContent = data.likes.length))
+      .then((data) => {
+        cardCountLikes.textContent = data.likes.length;
+        button.classList.add("card__like-button_is-active");
+      })
       .catch((e) => {
         console.log(e);
       });
   } else {
-    button.classList.remove("card__like-button_is-active");
     requestToggleLike(id, "DELETE")
-      .then((res) => res.json())
-      .then((data) => (cardCountLikes.textContent = data.likes.length))
+      .then((data) => {
+        cardCountLikes.textContent = data.likes.length;
+        button.classList.remove("card__like-button_is-active");
+      })
       .catch((e) => {
         console.log(e);
       });
@@ -55,7 +58,15 @@ export function createCard(
 
   cardImage.src = data.link;
   cardImage.alt = data.name;
+  console.log(data.likes);
   cardCountLikes.textContent = data.likes.length;
+
+  data.likes.forEach((like) => {
+    if (like._id === userId) {
+      likeButton.classList.add("card__like-button_is-active");
+    }
+  });
+
   cardElement.querySelector(".card__title").textContent = data.name;
 
   cardImage.addEventListener("click", () =>

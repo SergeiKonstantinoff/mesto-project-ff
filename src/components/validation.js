@@ -137,16 +137,8 @@ export function clearValidation(
     ...otherDataValidity
   }
 ) {
-  clearForm(profileForm);
   submitButtonInactive(profileForm, submitButtonSelector, inactiveButtonClass);
   clearErrorMessage(profileForm, errorClass, inputErrorClass, inputSelector);
-}
-
-//Очистка формы добавления карточки после добавления карточки
-function clearForm(profileForm) {
-  if (profileForm.classList.contains("form__reset")) {
-    profileForm.reset();
-  }
 }
 
 //Сделать кнопку неактивной
